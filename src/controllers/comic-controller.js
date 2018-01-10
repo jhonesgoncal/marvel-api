@@ -1,7 +1,7 @@
 'use strict'
 
 const ValidationContract = require('../validators/fluent-validator');
-const repository = require('../repositories/product-repository');
+const repository = require('../repositories/comic-repository');
 const config = require("../config");
 const guid = require('guid');
 const azure = require('azure-storage');
@@ -14,19 +14,7 @@ exports.get = async(req, res, next) => {
         res.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
-    }
-}
-
-exports.getBySlug = async(req, res, next) => {
-    try{
-        var data = await repository.getBySlug(req.params.slug);
-        res.status(200).send(data);
-    } catch(e){
-        res.status(500).send({
-            message: 'Falha ao processar sua requisição'
-        });
-    };
-    
+    }title
 }
 
 exports.getById = async(req, res, next) => {
@@ -41,18 +29,6 @@ exports.getById = async(req, res, next) => {
     
 }
 
-exports.getByTag = async(req, res, next) => {
-    try{
-        var data = await repository.getByTag(req.params.tag);
-        res.status(200).send(data);
-    }catch(e){
-        res.status(500).send({
-            message: 'Falha ao processar sua requisição'
-        });
-    }
-      
-}
-
 exports.post = async(req, res, next) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.title, 3, 'O titulo deve conter pelo menos 3 caracteres.');
@@ -64,7 +40,7 @@ exports.post = async(req, res, next) => {
     }
     try{
         //Cria o Blob Service
-        const blobSvc = azure.createBlobService(config.containerConnectionString);
+        /*const blobSvc = azure.createBlobService(config.containerConnectionString);
 
         let filename = guid.raw().toString() + '.jpg';
         let rawdata = req.body.image;
@@ -73,25 +49,22 @@ exports.post = async(req, res, next) => {
         let buffer = new Buffer(matches[2], 'base64');
 
         //Salva imagem
-        await blobSvc.createBlockBlobFromText('products-images', filename, buffer, {
+        await blobSvc.createBlockBlobFromText('comic-images', filename, buffer, {
             contentType: type
         }, function (error, result, response){
             if(error){
-                filename = 'default-product.png'
+                filename = 'default-comic.png'
             }
-        });
+        });*/
 
         await repository.create({
             title: req.body.title,
-            price: req.body.price,
-            slug: req.body.slug,
             description: req.body.description,
-            active: true,
-            tags: req.body.tags,
-            image: 'https://nodestro.blob.core.windows.net/products-images/' + filename
+            //image: 'https://nodestro.blob.core.windows.net/products-images/' + filename
+            image : req.body.image
         });
         res.status(201).send({ 
-            message: 'Produto cadastrado com sucesso!'
+            message: 'Comic cadastrado com sucesso!'
         });
     }catch(e){
         console.log(e);
