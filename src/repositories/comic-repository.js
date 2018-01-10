@@ -15,18 +15,19 @@ exports.getById = async(id) => {
 exports.create = async(data) => {
     var comic = new Comic(data);
     await comic.save();
+    return comic;
 }
 
-/*
+
 exports.addCharacter = async(id, data) => {
     await Comic
         .findByIdAndUpdate(id, {
-            $set: {
-                character: data.character
+            $push: {
+                characters: data.banana
             }
         });
 }
-*/
+
 
 exports.update = async(id,data) => {
     await Comic
@@ -34,7 +35,8 @@ exports.update = async(id,data) => {
             $set: {
                 title: data.title,
                 description: data.description,
-                image: data.image
+                image: data.image,
+                characters: data.characters
             }
         });
 }

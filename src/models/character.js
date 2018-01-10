@@ -2,8 +2,9 @@
 
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+
 const schema = new Schema({
-    title: {
+    name: {
         type: String,
         required: true,
         trim: true
@@ -13,15 +14,6 @@ const schema = new Schema({
         required: true,
         trim: true
     },
-    characters:[{
-        type: Object
-    }],
-    stories:[{
-        type: String
-    }],
-    creators:[{
-        type: Object
-    }],
     image: {
         type: String,
         required: true,
@@ -29,4 +21,4 @@ const schema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Comic', schema);
+module.exports = mongoose.model('Character', schema);

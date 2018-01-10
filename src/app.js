@@ -13,7 +13,7 @@ mongoose.connect(config.connectionString);
 
 //Carrega os Models
 const Comic = require('./models/comic');
-
+const Character = require('./models/character')
 //Carrega as Rotas
 const indexRoute = require('./routes/index-route');
 const comicRoute = require('./routes/comic-route');

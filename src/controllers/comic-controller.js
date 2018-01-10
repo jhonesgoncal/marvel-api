@@ -5,6 +5,8 @@ const repository = require('../repositories/comic-repository');
 const config = require("../config");
 const guid = require('guid');
 const azure = require('azure-storage');
+const respositoryCharacter = require('../repositories/character-repository');
+const Character = require('../models/character');
 
 exports.get = async(req, res, next) => {
     try{
@@ -57,7 +59,7 @@ exports.post = async(req, res, next) => {
             }
         });*/
 
-        await repository.create({
+        let data = await repository.create({
             title: req.body.title,
             description: req.body.description,
             //image: 'https://nodestro.blob.core.windows.net/products-images/' + filename
@@ -97,6 +99,25 @@ exports.put = async(req, res, next) => {
     }
    
 };
+
+exports.addCharacter = async(req, res, next) => {
+    try{
+        const character = new Character({
+            name: req.body.name,
+            description: req.body.description,
+            image: req.body.image
+        })
+        const resCharacter = await respositoryCharacter.create(character);
+        await repository.addCharacter(req.params.id, resCharacter)
+        res.status(200).send({ 
+            message: 'Character adicionado com sucesso!'
+        });
+    }catch(e){
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição' + e.message
+        });
+    }
+}
 
 exports.delete = async(req, res, next) => {
     try{
