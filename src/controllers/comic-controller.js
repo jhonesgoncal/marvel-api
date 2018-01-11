@@ -102,13 +102,16 @@ exports.put = async(req, res, next) => {
 
 exports.addCharacter = async(req, res, next) => {
     try{
+        let array = [];
+
         const character = new Character({
             name: req.body.name,
             description: req.body.description,
             image: req.body.image
         })
         const resCharacter = await respositoryCharacter.create(character);
-        await repository.addCharacter(req.params.id, resCharacter)
+        array.push(resCharacter._id);
+        await repository.addCharacter(req.params.id, array)
         res.status(200).send({ 
             message: 'Character adicionado com sucesso!'
         });

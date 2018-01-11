@@ -23,7 +23,7 @@ exports.addCharacter = async(id, data) => {
     await Comic
         .findByIdAndUpdate(id, {
             $push: {
-                characters: [data]
+                characters: data
             }
         });
 }
