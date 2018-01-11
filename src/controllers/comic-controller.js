@@ -90,7 +90,7 @@ exports.put = async(req, res, next) => {
     try{
         await repository.update(req.params.id, req.body);
         res.status(200).send({ 
-            message: 'Produto atualizado com sucesso!'
+            message: 'Comic atualizado com sucesso!'
         });
     }catch(e){
         res.status(500).send({
@@ -101,17 +101,23 @@ exports.put = async(req, res, next) => {
 };
 
 exports.addCharacter = async(req, res, next) => {
-    try{
-        let array = [];
+    let contract = new ValidationContract();
+    contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres.');
+    contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
 
+    if(!contract.isValid()){
+        res.status(400).send(contract.errors()).end();
+        return;
+    }
+
+    try{
         const character = new Character({
             name: req.body.name,
             description: req.body.description,
             image: req.body.image
         })
         const resCharacter = await respositoryCharacter.create(character);
-        array.push(resCharacter._id);
-        await repository.addCharacter(req.params.id, array)
+        await repository.addCharacter(req.params.id, resCharacter)
         res.status(200).send({ 
             message: 'Character adicionado com sucesso!'
         });
@@ -122,11 +128,24 @@ exports.addCharacter = async(req, res, next) => {
     }
 }
 
+exports.removeCharacter = async(req, res, next) => {
+    try{
+        await respositoryCharacter.delete(req.params.idCharacter)
+        res.status(200).send({ 
+            message: 'Character removido com sucesso!'
+        });
+    }catch(e){
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição'
+        });
+    }
+}
+
 exports.delete = async(req, res, next) => {
     try{
         await repository.delete(req.params.id)
         res.status(200).send({ 
-            message: 'Produto removido com sucesso!'
+            message: 'Comic removido com sucesso!'
         });
     }catch(e){
         res.status(500).send({

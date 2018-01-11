@@ -7,6 +7,9 @@ exports.create = async(data) => {
     await character.save();
     return character;
 }
+exports.delete = async(id) => {
+    await Character.findOneAndRemove(id)
+}
 
 
 

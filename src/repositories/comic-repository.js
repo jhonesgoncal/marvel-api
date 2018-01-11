@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const Comic = mongoose.model('Comic');
 
 exports.get = async() => {
-    const res = await Comic.find();
+    const res = await Comic.find({}).populate('characters', 'name description image');
         return res;
 }
 
 exports.getById = async(id) => {
-    const res = await Comic.findById(id);
+    const res = await Comic.findById(id).populate('characters', 'name description image');
     return res;
 }
 
@@ -22,7 +22,7 @@ exports.create = async(data) => {
 exports.addCharacter = async(id, data) => {
     await Comic
         .findByIdAndUpdate(id, {
-            $push: {
+            $addToSet: {
                 characters: data
             }
         });

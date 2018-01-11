@@ -33,3 +33,15 @@ exports.post = async(req, res, next) => {
    
 }
 
+exports.delete = async(req, res, next) => {
+    try{
+        await repository.delete(req.params.idCharacter)
+        res.status(200).send({ 
+            message: 'Produto removido com sucesso!'
+        });
+    }catch(e){
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição'
+        });
+    }
+}

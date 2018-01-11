@@ -11,5 +11,6 @@ router.get('/:id', controller.getById)
 router.put('/:id', controller.put); 
 router.put('/:id/character', controller.addCharacter); 
 router.delete('/:id', controller.delete);
+router.delete('/:id/character/:idCharacter', controller.removeCharacter);
 
 module.exports = router;
