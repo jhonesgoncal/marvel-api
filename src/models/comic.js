@@ -14,7 +14,8 @@ const schema = new Schema({
         trim: true
     },
     characters:[{
-        type: Object
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Character'
     }],
     stories:[{
         type: String
