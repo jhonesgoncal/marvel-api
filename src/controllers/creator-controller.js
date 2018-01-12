@@ -1,7 +1,7 @@
 'use strict'
 
 const ValidationContract = require('../validators/fluent-validator');
-const repository = require('../repositories/character-repository');
+const repository = require('../repositories/creator-repository');
 const config = require("../config");
 const guid = require('guid');
 const azure = require('azure-storage');
@@ -14,7 +14,7 @@ exports.get = async(req, res, next) => {
         res.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
-    }title
+    }
 }
 
 exports.getById = async(req, res, next) => {
@@ -31,7 +31,7 @@ exports.getById = async(req, res, next) => {
 
 exports.post = async(req, res, next) => {
     let contract = new ValidationContract();
-    contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres.');
+    contract.hasMinLen(req.body.fullName, 3, 'O nome deve conter pelo menos 3 caracteres.');
     contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
 
     if(!contract.isValid()){
@@ -40,12 +40,12 @@ exports.post = async(req, res, next) => {
     }
     try{
         let data = await repository.create({
-            name: req.body.name,
+            fullName: req.body.fullName,
             description: req.body.description,
             image : req.body.image
         });
         res.status(201).send({ 
-            message: 'Character cadastrado com sucesso!'
+            message: 'Creator cadastrado com sucesso!'
         });
     }catch(e){
         console.log(e);
@@ -58,7 +58,7 @@ exports.post = async(req, res, next) => {
 
 exports.put = async(req, res, next) => {
     let contract = new ValidationContract();
-    contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres.');
+    contract.hasMinLen(req.body.fullName, 3, 'O nome deve conter pelo menos 3 caracteres.');
     contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
 
     if(!contract.isValid()){
@@ -69,7 +69,7 @@ exports.put = async(req, res, next) => {
     try{
         await repository.update(req.params.id, req.body);
         res.status(200).send({ 
-            message: 'Character atualizado com sucesso!'
+            message: 'Creator atualizado com sucesso!'
         });
     }catch(e){
         res.status(500).send({
@@ -83,7 +83,7 @@ exports.delete = async(req, res, next) => {
     try{
         await repository.delete(req.params.id)
         res.status(200).send({ 
-            message: 'Character removido com sucesso!'
+            message: 'Creator removido com sucesso!'
         });
     }catch(e){
         res.status(500).send({

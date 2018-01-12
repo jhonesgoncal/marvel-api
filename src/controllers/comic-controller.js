@@ -5,8 +5,6 @@ const repository = require('../repositories/comic-repository');
 const config = require("../config");
 const guid = require('guid');
 const azure = require('azure-storage');
-const respositoryCharacter = require('../repositories/character-repository');
-const Character = require('../models/character');
 
 exports.get = async(req, res, next) => {
     try{
@@ -100,24 +98,10 @@ exports.put = async(req, res, next) => {
    
 };
 
-exports.addCharacter = async(req, res, next) => {
-    let contract = new ValidationContract();
-    contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres.');
-    contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
-
-    if(!contract.isValid()){
-        res.status(400).send(contract.errors()).end();
-        return;
-    }
+exports.includeCharacter = async(req, res, next) => {
 
     try{
-        const character = new Character({
-            name: req.body.name,
-            description: req.body.description,
-            image: req.body.image
-        })
-        const resCharacter = await respositoryCharacter.create(character);
-        await repository.addCharacter(req.params.id, resCharacter)
+        await repository.includeCharacter(req.params.id, req.body)
         res.status(200).send({ 
             message: 'Character adicionado com sucesso!'
         });
@@ -128,17 +112,44 @@ exports.addCharacter = async(req, res, next) => {
     }
 }
 
-exports.removeCharacter = async(req, res, next) => {
+exports.getCharacters = async(req, res, next) => {
     try{
-        await respositoryCharacter.delete(req.params.idCharacter)
-        res.status(200).send({ 
-            message: 'Character removido com sucesso!'
-        });
+        var data = await repository.getCharacters(req.params.id);
+        res.status(200).send(data.characters);
     }catch(e){
+        console.log(e);
         res.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
     }
+    
+}
+
+exports.includeCreator = async(req, res, next) => {
+
+    try{
+        await repository.includeCreator(req.params.id, req.body)
+        res.status(200).send({ 
+            message: 'Creator adicionado com sucesso!'
+        });
+    }catch(e){
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição' + e.message
+        });
+    }
+}
+
+exports.getCreators = async(req, res, next) => {
+    try{
+        var data = await repository.getCreators(req.params.id);
+        res.status(200).send(data.creators);
+    }catch(e){
+        console.log(e);
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição'
+        });
+    }
+    
 }
 
 exports.delete = async(req, res, next) => {

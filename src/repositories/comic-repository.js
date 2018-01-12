@@ -3,12 +3,16 @@ const mongoose = require('mongoose');
 const Comic = mongoose.model('Comic');
 
 exports.get = async() => {
-    const res = await Comic.find({}).populate('characters', 'name description image');
-        return res;
+    const res = await Comic.find({})
+        .populate('characters', 'name description image')
+        .populate('creators', 'fullName description image');
+    return res;
 }
 
 exports.getById = async(id) => {
-    const res = await Comic.findById(id).populate('characters', 'name description image');
+    const res = await Comic.findById(id)
+        .populate('characters', 'name description image')
+        .populate('creators', 'fullName description image');
     return res;
 }
 
@@ -19,15 +23,39 @@ exports.create = async(data) => {
 }
 
 
-exports.addCharacter = async(id, data) => {
+exports.includeCharacter = async(id, data) => {
     await Comic
         .findByIdAndUpdate(id, {
             $addToSet: {
-                characters: data
+                characters: data.character
             }
         });
 }
 
+exports.getCharacters = async(id, data) => {
+    const res = await Comic.findOne({
+            _id: id
+    }, 'creators')
+    .populate('creators', 'name description image');
+    return res;
+}
+
+exports.includeCreator = async(id, data) => {
+    await Comic
+        .findByIdAndUpdate(id, {
+            $addToSet: {
+                creators: data.creator
+            }
+        });
+}
+
+exports.getCreators = async(id, data) => {
+    const res = await Comic.findOne({
+            _id: id
+    }, 'creators')
+    .populate('creators', 'fullName description image');
+    return res;
+}
 
 exports.update = async(id,data) => {
     await Comic

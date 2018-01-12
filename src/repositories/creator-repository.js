@@ -1,28 +1,28 @@
 'use strict'
 const mongoose = require('mongoose');
-const Character = mongoose.model('Character');
+const Creator = mongoose.model('Creator');
 
 
 exports.get = async() => {
-    const res = await Character.find();
+    const res = await Creator.find();
     return res;
 }
 
 exports.getById = async(id) => {
-    const res = await Character.findById(id);
+    const res = await Creator.findById(id);
     return res;
 }
 
 exports.create = async(data) => {
-    var character = new Character(data);
-    await character.save();
+    var creator = new Creator(data);
+    await creator.save();
 }
 
 exports.update = async(id,data) => {
-    await Character
+    await Creator
         .findByIdAndUpdate(id, {
             $set: {
-                name: data.name,
+                fullName: data.fullName,
                 description: data.description,
                 image: data.image
             }
@@ -30,7 +30,7 @@ exports.update = async(id,data) => {
 }
 
 exports.delete = async(id) => {
-    await Character.findOneAndRemove(id)
+    await Creator.findOneAndRemove(id)
 }
 
 

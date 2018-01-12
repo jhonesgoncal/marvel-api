@@ -13,10 +13,14 @@ mongoose.connect(config.connectionString);
 
 //Carrega os Models
 const Comic = require('./models/comic');
-const Character = require('./models/character')
+const Character = require('./models/character');
+const Creator = require('./models/creator');
+
 //Carrega as Rotas
 const indexRoute = require('./routes/index-route');
 const comicRoute = require('./routes/comic-route');
+const characterRoute = require('./routes/character-route');
+const creatorRoute = require('./routes/creator-route');
 const authRoute = require('./routes/authenticate-route');
 
 app.use(bodyParser.json({
@@ -37,6 +41,8 @@ app.use(function(req, res, next){
 
 app.use('/', indexRoute);
 app.use('/comics', comicRoute);
+app.use('/characters', characterRoute);
+app.use('/creators', creatorRoute);
 app.use('/authenticate', authRoute);
 
 module.exports = app;

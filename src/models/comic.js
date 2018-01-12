@@ -18,10 +18,12 @@ const schema = new Schema({
         ref: 'Character'
     }],
     stories:[{
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Stories'
     }],
     creators:[{
-        type: Object
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Creator'
     }],
     image: {
         type: String,
