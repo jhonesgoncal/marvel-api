@@ -57,6 +57,23 @@ exports.getCreators = async(id, data) => {
     return res;
 }
 
+exports.includeStorie = async(id, data) => {
+    await Comic
+        .findByIdAndUpdate(id, {
+            $addToSet: {
+                stories: data.storie
+            }
+        });
+}
+
+exports.getStories = async(id, data) => {
+    const res = await Comic.findOne({
+            _id: id
+    }, 'creators')
+    .populate('stories', 'title');
+    return res;
+}
+
 exports.update = async(id,data) => {
     await Comic
         .findByIdAndUpdate(id, {

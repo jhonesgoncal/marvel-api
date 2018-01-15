@@ -152,6 +152,33 @@ exports.getCreators = async(req, res, next) => {
     
 }
 
+exports.includeStorie = async(req, res, next) => {
+
+    try{
+        await repository.includeStorie(req.params.id, req.body)
+        res.status(200).send({ 
+            message: 'Storie adicionado com sucesso!'
+        });
+    }catch(e){
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição' + e.message
+        });
+    }
+}
+
+exports.getStories = async(req, res, next) => {
+    try{
+        var data = await repository.getStories(req.params.id);
+        res.status(200).send(data.stories);
+    }catch(e){
+        console.log(e);
+        res.status(500).send({
+            message: 'Falha ao processar sua requisição'
+        });
+    }
+    
+}
+
 exports.delete = async(req, res, next) => {
     try{
         await repository.delete(req.params.id)
