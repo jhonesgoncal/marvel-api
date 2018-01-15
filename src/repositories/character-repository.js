@@ -16,6 +16,7 @@ exports.getById = async(id) => {
 exports.create = async(data) => {
     var character = new Character(data);
     await character.save();
+    return character;
 }
 
 exports.update = async(id,data) => {

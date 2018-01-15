@@ -16,6 +16,7 @@ exports.getById = async(id) => {
 exports.create = async(data) => {
     var storie = new Storie(data);
     await storie.save();
+    return storie;
 }
 
 exports.update = async(id,data) => {

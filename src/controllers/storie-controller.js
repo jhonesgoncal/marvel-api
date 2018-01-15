@@ -40,9 +40,7 @@ exports.post = async(req, res, next) => {
         let data = await repository.create({
             title: req.body.title
         });
-        res.status(201).send({ 
-            message: 'Storie cadastrado com sucesso!'
-        });
+        res.status(201).send(data);
     }catch(e){
         console.log(e);
         res.status(500).send({

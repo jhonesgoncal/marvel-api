@@ -19,7 +19,7 @@ const schema = new Schema({
     }],
     stories:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Stories'
+        ref: 'Storie'
     }],
     creators:[{
         type: mongoose.Schema.Types.ObjectId,

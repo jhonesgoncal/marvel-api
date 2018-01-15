@@ -11,6 +11,7 @@ exports.get = async(req, res, next) => {
         var data = await repository.get();
         res.status(200).send(data);
     } catch(e){
+        console.log(e.message);
         res.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
@@ -40,7 +41,7 @@ exports.post = async(req, res, next) => {
     }
     try{
         //Cria o Blob Service
-        /*const blobSvc = azure.createBlobService(config.containerConnectionString);
+        const blobSvc = azure.createBlobService(config.containerConnectionString);
 
         let filename = guid.raw().toString() + '.jpg';
         let rawdata = req.body.image;
@@ -55,13 +56,12 @@ exports.post = async(req, res, next) => {
             if(error){
                 filename = 'default-comic.png'
             }
-        });*/
+        });
 
         let data = await repository.create({
             title: req.body.title,
             description: req.body.description,
-            //image: 'https://nodestro.blob.core.windows.net/products-images/' + filename
-            image : req.body.image
+            image: 'https://marvelapi.blob.core.windows.net/comic-images/' + filename
         });
         res.status(201).send({ 
             message: 'Comic cadastrado com sucesso!'

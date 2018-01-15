@@ -16,6 +16,7 @@ exports.getById = async(id) => {
 exports.create = async(data) => {
     var creator = new Creator(data);
     await creator.save();
+    return creator;
 }
 
 exports.update = async(id,data) => {

@@ -5,14 +5,16 @@ const Comic = mongoose.model('Comic');
 exports.get = async() => {
     const res = await Comic.find({})
         .populate('characters', 'name description image')
-        .populate('creators', 'fullName description image');
+        .populate('creators', 'fullName description image')
+        .populate('stories', 'title');
     return res;
 }
 
 exports.getById = async(id) => {
     const res = await Comic.findById(id)
         .populate('characters', 'name description image')
-        .populate('creators', 'fullName description image');
+        .populate('creators', 'fullName description image')
+        .populate('stories', 'title');
     return res;
 }
 
