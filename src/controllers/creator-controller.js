@@ -33,6 +33,7 @@ exports.post = async(req, res, next) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.fullName, 3, 'O nome deve conter pelo menos 3 caracteres.');
     contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
+    contract.isNotJpgOrPng(req.body.thumbnail.extension, 3, 'O thumbnail deve ser JPG ou PNG');
 
     if(!contract.isValid()){
         res.status(400).send(contract.errors()).end();
@@ -40,28 +41,15 @@ exports.post = async(req, res, next) => {
     }
     try{
 
-        //Cria o Blob Service
-        const blobSvc = azure.createBlobService(config.containerConnectionString);
+        const resultThumbnail = await utils.saveThumbnail('creator', req.body.thumbnail.path, req.body.thumbnail.extension);
 
-        let filename = guid.raw().toString() + '.jpg';
-        let rawdata = req.body.image;
-        let matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-        let type = matches[1];
-        let buffer = new Buffer(matches[2], 'base64');
-
-        //Salva imagem
-        await blobSvc.createBlockBlobFromText('creator-images', filename, buffer, {
-            contentType: type
-        }, function (error, result, response){
-            if(error){
-                filename = 'default-creator.png'
-            }
-        });
-
-        let data = await repository.create({
+        const data = await repository.create({
             fullName: req.body.fullName,
             description: req.body.description,
-            image : 'https://marvelapi.blob.core.windows.net/creator-images/' + filename
+            thumbnail: {
+                path: resultThumbnail.path,
+                extension: resultThumbnail.extension
+            }
         });
         res.status(201).send(data);
     }catch(e){

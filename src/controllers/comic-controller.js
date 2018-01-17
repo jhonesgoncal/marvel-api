@@ -5,6 +5,7 @@ const repository = require('../repositories/comic-repository');
 const config = require("../config");
 const guid = require('guid');
 const azure = require('azure-storage');
+const utils = require('../utils');
 
 exports.get = async(req, res, next) => {
     try{
@@ -34,34 +35,22 @@ exports.post = async(req, res, next) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.title, 3, 'O titulo deve conter pelo menos 3 caracteres.');
     contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
+    contract.isNotJpgOrPng(req.body.thumbnail.extension, 'O thumbnail deve ser JPG ou PNG');
 
     if(!contract.isValid()){
         res.status(400).send(contract.errors()).end();
         return;
     }
     try{
-        //Cria o Blob Service
-        const blobSvc = azure.createBlobService(config.containerConnectionString);
+        const resultThumbnail = await utils.saveThumbnail('comic', req.body.thumbnail.path, req.body.thumbnail.extension);
 
-        let filename = guid.raw().toString() + '.jpg';
-        let rawdata = req.body.image;
-        let matches = rawdata.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
-        let type = matches[1];
-        let buffer = new Buffer(matches[2], 'base64');
-
-        //Salva imagem
-        await blobSvc.createBlockBlobFromText('comic-images', filename, buffer, {
-            contentType: type
-        }, function (error, result, response){
-            if(error){
-                filename = 'default-comic.png'
-            }
-        });
-
-        let data = await repository.create({
+        const data = await repository.create({
             title: req.body.title,
             description: req.body.description,
-            image: 'https://marvelapi.blob.core.windows.net/comic-images/' + filename
+            thumbnail: {
+                path: resultThumbnail.path,
+                extension: resultThumbnail.extension
+            }
         });
         res.status(201).send({ 
             message: 'Comic cadastrado com sucesso!'

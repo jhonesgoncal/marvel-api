@@ -14,8 +14,8 @@ const schema = new Schema({
         required: true,
         trim: true
     },
-    image: {
-        type: String,
+    thumbnail: {
+        type: mongoose.Schema.Types.Mixed,
         required: true,
         trim: true
     }

@@ -32,6 +32,11 @@ ValidationContract.prototype.isEmail = (value, message) => {
         errors.push({ message: message });
 }
 
+ValidationContract.prototype.isNotJpgOrPng = (value, message) => {
+    if (value !== 'jpg' || value !== 'png')
+        errors.push({ message: message });
+}
+
 ValidationContract.prototype.errors = () => { 
     return errors; 
 }
@@ -43,5 +48,7 @@ ValidationContract.prototype.clear = () => {
 ValidationContract.prototype.isValid = () => {
     return errors.length == 0;
 }
+
+
 
 module.exports = ValidationContract;

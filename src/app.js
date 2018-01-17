@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const config = require('./config');
+const utils = require('./utils');
 
 const router = express.Router();
 const app = express();

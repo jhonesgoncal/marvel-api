@@ -25,8 +25,8 @@ const schema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Creator'
     }],
-    image: {
-        type: String,
+    thumbnail: {
+        type: mongoose.Schema.Types.Mixed,
         required: true,
         trim: true
     }
