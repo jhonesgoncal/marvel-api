@@ -4,16 +4,16 @@ const Comic = mongoose.model('Comic');
 
 exports.get = async() => {
     const res = await Comic.find({})
-        .populate('characters', 'name description image')
-        .populate('creators', 'fullName description image')
+        .populate('characters', 'name description thumbnail')
+        .populate('creators', 'fullName description thumbnail')
         .populate('stories', 'title');
     return res;
 }
 
 exports.getById = async(id) => {
     const res = await Comic.findById(id)
-        .populate('characters', 'name description image')
-        .populate('creators', 'fullName description image')
+        .populate('characters', 'name description thumbnail')
+        .populate('creators', 'fullName description thumbnail')
         .populate('stories', 'title');
     return res;
 }
@@ -38,7 +38,7 @@ exports.getCharacters = async(id, data) => {
     const res = await Comic.findOne({
             _id: id
     }, 'creators')
-    .populate('creators', 'name description image');
+    .populate('creators', 'name description thumbnail');
     return res;
 }
 
@@ -55,7 +55,7 @@ exports.getCreators = async(id, data) => {
     const res = await Comic.findOne({
             _id: id
     }, 'creators')
-    .populate('creators', 'fullName description image');
+    .populate('creators', 'fullName description thumbnail');
     return res;
 }
 

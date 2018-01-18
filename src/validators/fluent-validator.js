@@ -33,7 +33,7 @@ ValidationContract.prototype.isEmail = (value, message) => {
 }
 
 ValidationContract.prototype.isNotJpgOrPng = (value, message) => {
-    if (value !== 'jpg' || value !== 'png')
+    if (!(value === 'jpg') && !(value == 'png'))
         errors.push({ message: message });
 }
 

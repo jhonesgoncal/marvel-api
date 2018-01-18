@@ -25,7 +25,10 @@ exports.update = async(id,data) => {
             $set: {
                 fullName: data.fullName,
                 description: data.description,
-                image: data.image
+                thumbnail: {
+                    path: thumbnail.path,
+                    extension: thumbnail.extension
+                }
             }
         });
 }

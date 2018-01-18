@@ -5,6 +5,7 @@ const repository = require('../repositories/creator-repository');
 const config = require("../config");
 const guid = require('guid');
 const azure = require('azure-storage');
+const utils = require('../utils');
 
 exports.get = async(req, res, next) => {
     try{
@@ -33,7 +34,7 @@ exports.post = async(req, res, next) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.fullName, 3, 'O nome deve conter pelo menos 3 caracteres.');
     contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
-    contract.isNotJpgOrPng(req.body.thumbnail.extension, 3, 'O thumbnail deve ser JPG ou PNG');
+    contract.isNotJpgOrPng(req.body.thumbnail.extension, 'O thumbnail deve ser JPG ou PNG');
 
     if(!contract.isValid()){
         res.status(400).send(contract.errors()).end();
@@ -43,7 +44,7 @@ exports.post = async(req, res, next) => {
 
         const resultThumbnail = await utils.saveThumbnail('creator', req.body.thumbnail.path, req.body.thumbnail.extension);
 
-        const data = await repository.create({
+        let data = await repository.create({
             fullName: req.body.fullName,
             description: req.body.description,
             thumbnail: {
@@ -65,6 +66,7 @@ exports.put = async(req, res, next) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.fullName, 3, 'O nome deve conter pelo menos 3 caracteres.');
     contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
+    contract.isNotJpgOrPng(req.body.thumbnail.extension, 'O thumbnail deve ser JPG ou PNG');
 
     if(!contract.isValid()){
         res.status(400).send(contract.errors()).end();
@@ -72,7 +74,9 @@ exports.put = async(req, res, next) => {
     }
 
     try{
-        await repository.update(req.params.id, req.body);
+        const resultThumbnail = await utils.saveThumbnail('creator', req.body.thumbnail.path, req.body.thumbnail.extension);
+
+        await repository.update(req.params.id, req.body, resultThumbnail);
         res.status(200).send({ 
             message: 'Creator atualizado com sucesso!'
         });

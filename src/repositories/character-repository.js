@@ -19,13 +19,16 @@ exports.create = async(data) => {
     return character;
 }
 
-exports.update = async(id,data) => {
+exports.update = async(id,data, thumbnail) => {
     await Character
         .findByIdAndUpdate(id, {
             $set: {
                 name: data.name,
                 description: data.description,
-                image: data.image
+                thumbnail: {
+                    path: thumbnail.path,
+                    extension: thumbnail.extension
+                }
             }
         });
 }

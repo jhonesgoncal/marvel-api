@@ -4,6 +4,7 @@ const ValidationContract = require('../validators/fluent-validator');
 const repository = require('../repositories/character-repository');
 const config = require("../config");
 const guid = require('guid');
+const utils = require('../utils');
 const azure = require('azure-storage');
 
 exports.get = async(req, res, next) => {
@@ -64,6 +65,7 @@ exports.put = async(req, res, next) => {
     let contract = new ValidationContract();
     contract.hasMinLen(req.body.name, 3, 'O nome deve conter pelo menos 3 caracteres.');
     contract.hasMinLen(req.body.description, 3, 'A descricao deve conter pelo menos  3 caracteres.');
+    contract.isNotJpgOrPng(req.body.thumbnail.extension, 'O thumbnail deve ser JPG ou PNG');
 
     if(!contract.isValid()){
         res.status(400).send(contract.errors()).end();
@@ -71,7 +73,9 @@ exports.put = async(req, res, next) => {
     }
 
     try{
-        await repository.update(req.params.id, req.body);
+        const resultThumbnail = await utils.saveThumbnail('character', req.body.thumbnail.path, req.body.thumbnail.extension);
+
+        await repository.update(req.params.id, req.body, resultThumbnail);
         res.status(200).send({ 
             message: 'Character atualizado com sucesso!'
         });
