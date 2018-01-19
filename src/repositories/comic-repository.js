@@ -89,6 +89,6 @@ exports.update = async(id,data) => {
 }
 
 exports.delete = async(id) => {
-    await Comic.findOneAndRemove(id)
+    await Comic.findByIdAndRemove(id)
 }
 
