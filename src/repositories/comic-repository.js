@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Comic = mongoose.model('Comic');
 
 exports.get = async() => {
-    const res = await Comic.find({})
+    const res = await Comic.find()
         .populate('characters', 'name description thumbnail')
         .populate('creators', 'fullName description thumbnail')
         .populate('stories', 'title');
@@ -37,8 +37,8 @@ exports.includeCharacter = async(id, data) => {
 exports.getCharacters = async(id, data) => {
     const res = await Comic.findOne({
             _id: id
-    }, 'creators')
-    .populate('creators', 'name description thumbnail');
+    }, 'characters')
+    .populate('characters', 'name description thumbnail');
     return res;
 }
 
@@ -71,7 +71,7 @@ exports.includeStorie = async(id, data) => {
 exports.getStories = async(id, data) => {
     const res = await Comic.findOne({
             _id: id
-    }, 'creators')
+    }, 'stories')
     .populate('stories', 'title');
     return res;
 }
