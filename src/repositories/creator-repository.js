@@ -34,7 +34,7 @@ exports.update = async(id,data) => {
 }
 
 exports.delete = async(id) => {
-    await Creator.findOneAndRemove(id)
+    await Creator.findByIdAndRemove(id)
 }
 
 

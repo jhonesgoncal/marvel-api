@@ -34,7 +34,7 @@ exports.update = async(id,data, thumbnail) => {
 }
 
 exports.delete = async(id) => {
-    await Character.findOneAndRemove(id)
+    await Character.findByIdAndRemove(id)
 }
 
 

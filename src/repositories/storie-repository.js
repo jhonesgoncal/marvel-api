@@ -29,7 +29,7 @@ exports.update = async(id,data) => {
 }
 
 exports.delete = async(id) => {
-    await Storie.findOneAndRemove(id)
+    await Storie.findByIdAndRemove(id)
 }
 
 
