@@ -37,6 +37,12 @@ ValidationContract.prototype.isNotJpgOrPng = (value, message) => {
         errors.push({ message: message });
 }
 
+ValidationContract.prototype.isUrl = (value) => {
+    const expression = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    const regex = new RegExp(expression);
+    return regex.test(value);
+}
+
 ValidationContract.prototype.errors = () => { 
     return errors; 
 }

@@ -74,7 +74,19 @@ exports.put = async(req, res, next) => {
     }
 
     try{
-        await repository.update(req.params.id, req.body);
+        if(contract.isUrl(req.body.thumbnail.path)){
+           const resultThumbnail = req.body.thumbnail;
+        }else{
+           const resultThumbnail = await utils.saveThumbnail('comic', req.body.thumbnail.path, req.body.thumbnail.extension);
+        }
+        await repository.update(req.params.id,{
+            title: req.body.title,
+            description: req.body.description,
+            thumbnail: {
+                path: resultThumbnail.path,
+                extension: resultThumbnail.extension
+            }
+        });
         res.status(200).send({ 
             message: 'Comic atualizado com sucesso!'
         });
