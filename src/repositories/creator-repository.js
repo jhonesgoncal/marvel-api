@@ -26,8 +26,8 @@ exports.update = async(id,data) => {
                 fullName: data.fullName,
                 description: data.description,
                 thumbnail: {
-                    path: thumbnail.path,
-                    extension: thumbnail.extension
+                    path: data.thumbnail.path,
+                    extension: data.thumbnail.extension
                 }
             }
         });

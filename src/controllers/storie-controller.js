@@ -30,7 +30,7 @@ exports.getById = async(req, res, next) => {
 
 exports.post = async(req, res, next) => {
     let contract = new ValidationContract();
-    contract.hasMinLen(req.body.title, 3, 'O nome deve conter pelo menos 3 caracteres.');
+    contract.hasMinLen(req.body.title, 3, 'O titulo deve conter pelo menos 3 caracteres.');
 
     if(!contract.isValid()){
         res.status(400).send(contract.errors()).end();

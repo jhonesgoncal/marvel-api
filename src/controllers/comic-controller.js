@@ -74,10 +74,12 @@ exports.put = async(req, res, next) => {
     }
 
     try{
+        let resultThumbnail;
+
         if(contract.isUrl(req.body.thumbnail.path)){
-           const resultThumbnail = req.body.thumbnail;
+           resultThumbnail = req.body.thumbnail;
         }else{
-           const resultThumbnail = await utils.saveThumbnail('comic', req.body.thumbnail.path, req.body.thumbnail.extension);
+           resultThumbnail = await utils.saveThumbnail('comic', req.body.thumbnail.path, req.body.thumbnail.extension);
         }
         await repository.update(req.params.id,{
             title: req.body.title,
@@ -91,6 +93,7 @@ exports.put = async(req, res, next) => {
             message: 'Comic atualizado com sucesso!'
         });
     }catch(e){
+        console.log(e);
         res.status(500).send({
             message: 'Falha ao processar sua requisição'
         });

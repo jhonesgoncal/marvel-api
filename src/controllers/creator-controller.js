@@ -74,13 +74,28 @@ exports.put = async(req, res, next) => {
     }
 
     try{
-        const resultThumbnail = await utils.saveThumbnail('creator', req.body.thumbnail.path, req.body.thumbnail.extension);
-
-        await repository.update(req.params.id, req.body, resultThumbnail);
+        let resultThumbnail;
+        if(contract.isUrl(req.body.thumbnail.path)){
+            resultThumbnail = req.body.thumbnail;
+         }else{
+            resultThumbnail = await utils.saveThumbnail('creator', req.body.thumbnail.path, req.body.thumbnail.extension);
+         }
+        
+         console.log(req.body);
+         console.log(req.params.id)
+        await repository.update(req.params.id, {
+            fullName: req.body.fullName,
+            description: req.body.description,
+            thumbnail: {
+                path: resultThumbnail.path,
+                extension: resultThumbnail.extension
+            }
+        });
         res.status(200).send({ 
             message: 'Creator atualizado com sucesso!'
         });
     }catch(e){
+        console.log(e)
         res.status(500).send({
             message: 'Falha ao processar sua requisição'
         });
